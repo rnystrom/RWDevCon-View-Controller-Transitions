@@ -1,4 +1,4 @@
-# 308: Collection View Custom Layouts: Demo Instructions
+# 305: iOS Animation: View Controller Transitions
 
 In this demo, you’ll build a basic custom layout that displays the sessions of a conference schedule.
 
