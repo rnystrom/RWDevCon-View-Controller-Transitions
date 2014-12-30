@@ -2,6 +2,20 @@
 
 >30 min demo / 15 min lab / 15 min challenge time limits
 
+## intro
+
+- protocols
+    + UIViewControllerTransitioningDelegate
+        * delegates what happens when presenting, push/popping, dismissing, interacting
+    + UIViewControllerAnimatedTransitioning
+        * decides what to do for animation as well as duration
+    + UIViewControllerContextTransitioning
+        * config & state of transition
+    + UIViewControllerInteractiveTransitioning
+        * nav swipe back, can do way more
+        * left for research and reading
+- 
+
 ## Demo pool
 
 - UIViewControllerTransitioningDelegate
