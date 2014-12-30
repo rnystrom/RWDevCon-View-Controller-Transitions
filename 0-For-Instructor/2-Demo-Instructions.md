@@ -1,143 +1,146 @@
-# 305: iOS Animation: View Controller Transitions
+# 305: View Controller Transitions
 
-In this demo, you’ll build a basic custom layout that displays the sessions of a conference schedule.
+In this demo, you’ll build a slick custom view controller transition for your new .
 
 The steps here will be explained in the demo, but here are the raw steps in case you miss a step or get stuck.
 
-### 1) Create Layout
+### Intro to the Project
 
-Right-click on the **Layouts** group, and from the menu choose **New File...**. Then, select **iOS\Source\Swift File** and click **Next**. Name the file **ScheduleLayout.swift** and click **Create**. 
+Take a quick second to get used to the project that you are going to be working on so that you know how to get around. 
 
-Open the file **ScheduleLayout.swift**, and at the top import UIKit:
+**Build and run** the starter project. Tap on any of the images that pops up. You should see a really simple modal controller transition and animation that you have probably seen thousands of times.
+
+This transition uses the `modalPresentationStyle` of `.OverFullScreen` so that we can use a transparent background and see the previous controller behind it.
+
+The code that presents the controller is at the bottom of **PhotosController.swift** in **collectionView:didSelectItemAtIndexPath:**.
+
+### Create Layout
+
+Right-click on the **Animation Coordinators** group, and from the menu choose **New File...**. Then, select **iOS\Source\Swift File** and click **Next**. Name the file **FullscreenPresentationDelegate.swift** and click **Create**. 
+
+Open the file **FullscreenPresentationDelegate.swift**, and at the top import UIKit:
 
 	import UIKit
 
-Then add the class definition, making sure to subclass UICollectionViewLayout:
+Then add the class definition, subclassing `NSObject` and conforming to the protocol `UIViewControllerTransitioningDelegate`:
 
-	class ScheduleLayout: UICollectionViewLayout {
+	class FullscreenPresentationDelegate: NSObject, UIViewControllerTransitioningDelegate {
 	}
 
 Save your changes.
 
-### 2) Update Storyboard
+### Create Animators
 
-Open **main.storyboard**. In the Document Inspector, expand **Schedule Scene** until you find the collection view. Select the collection view, and then in the Attributes Inspector change the **Layout** to **Custom** and set the **Class** to **Schedule Layout**.
+Just like you created the file *FullscreenPresentationDelegate.swift*, right-click the **Animation Coordinators** group and create two more swift files: **FullscreenPresentationAnimator.swift** and **FullscreenPresentationDelegate.swift**.
 
-Save your changes.
+Open the file **FullscreenPresentationAnimator.swift**, and at the top import UIKit:
 
-### 3) Add Data Source
+	import UIKit
 
-Drag an **Object** from the Object Library onto the **Schedule Scene** in the Document Outline. Select the object, and in the Identity Inspector change its **Custom Class** to **ScheduleDataSource**.
+Then add the class definition, subclassing `NSObject` and conforming to the protocol `UIViewControllerAnimatedTransitioning`:
 
-In the Document Outline, right-click on the collection view to bring up its outlets. Click the small ‘x’ to disconnect the existing dataSource outlet, and then drag from the **dataSource** outlet to the **ScheduleDataSource** object to connect them.
-
-### 4) Setup Properties
-
-Open **ScheduleLayout.swift** and add the following private property to the top of the class:
-
-	private lazy var dataSource: ScheduleDataSource = {
-	  return self.collectionView!.dataSource as ScheduleDataSource
-	}()
-
-Save your changes.
-
-### 5) Calculate Frame
-
-Add the `frameForSession(_: atIndexPath:)` method just below the property:
-
-	private func frameForSession(session: NSDictionary, atIndexPath indexPath: NSIndexPath) -> CGRect {
-	  let heightPerTrack = collectionViewContentSize().height / CGFloat(dataSource.numberOfTracksInSchedule)
-	  let hour = dataSource.floatValueForKey("Hour", inSession: session)
-	  let offset = dataSource.floatValueForKey("Offset", inSession: session)
-	  let length = dataSource.floatValueForKey("Length", inSession: session)
-	  let width = dataSource.widthPerHour * CGFloat(length)
-	  let x = (CGFloat(hour) * dataSource.widthPerHour) + (dataSource.widthPerHour * CGFloat(offset))
-	  let y = heightPerTrack * CGFloat(indexPath.item)
-	  let frame = CGRectMake(x, y, width, heightPerTrack)
-	  return frame
+	class FullscreenDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 	}
 
-Save your changes.
+Try building the project. Notice that Xcode throws a compile error at you. This is because you need to finish conforming your new `FullscreenPresentationAnimator` class to the `UIViewControllerAnimatedTransitioning` protocol.
 
-It’s now time to override the four methods required to implement a custom layout.
+In the file **FullscreenPresentationAnimator.swift**, add the following two methods to your class definition:
 
-### 6) Determine Content Size
-
-First, override `collectionViewContentSize()`. Place this just below `frameForSession(_: atIndexPath:)`:
-
-	override func collectionViewContentSize() -> CGSize {
-	  let hoursInSchedule = CGFloat(dataSource.numberOfHoursInSchedule)
-	  let height = CGRectGetHeight(collectionView!.bounds) - collectionView!.contentInset.top
-	  let width = hoursInSchedule * dataSource.widthPerHour
-	  return CGSizeMake(width, height)
+	func transitionDuration(ctx: UIViewControllerContextTransitioning) -> NSTimeInterval {
+		return 0.4
 	}
 
-Save your changes.
+	func animateTransition(ctx: UIViewControllerContextTransitioning) {}
 
-### 7) Layout Attributes For Elements
+Build your project to save it and see that it compiles. You will come back to this class later to create an animation.
 
-Next, override `layoutAttributesForElementsInRect(_:)`. Add the following to `ScheduleLayout`:
+**Copy** your entire **FullscreenPresentationAnimator.swift** file. Open **FullscreenDismissAnimator.swift**, highlight the entire file, and **paste**.
 
-	override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
-	  let attributes = NSMutableArray()
-	  let itemIndexPaths = dataSource.indexPathsOfScheduleItems()
-	  for indexPath in itemIndexPaths {
-	    let itemAttributes = layoutAttributesForItemAtIndexPath(indexPath as NSIndexPath)
-	    attributes.addObject(itemAttributes)
-	  }
-	  return attributes
+In **FullscreenDismissAnimator.swift**, change the FullscreenPresentationAnimator class to **FullscreenDismissAnimator**.
+
+### Assigning Animators
+
+Go back to **FullscreenPresentationDelegate.swift** and add a method to return objects that should be used for presentation and dismiss animations. You should be able to figure out which classes we are going to use.
+
+	func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+		return FullscreenDismissAnimator()
 	}
 
-Check out the slides for an overview of what this method is for, and why it’s so important.
-
-Save your changes.
-
-### 8) Layout Attributes For Each Item
-
-Then, override `layoutAttributesForItemAtIndexPath(_:)` by adding the following just below the method you added in the previous step:
-
-	override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes! {
-	  let session = dataSource.sessionForIndexPath(indexPath)
-	  let attributes = UICollectionViewLayoutAttributes(forCellWithIndexPath: indexPath)
-	  attributes.frame = frameForSession(session, atIndexPath: indexPath)
-	  return attributes
+	func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+		return FullscreenPresentationAnimator()
 	}
 
-Save your changes.
+Build to save and make sure that your project compiles correctly.
 
-### 9) Invalidating The Layout
+### Wiring the Delegate
 
-Finally, override `shouldInvalidateLayoutForBoundsChange(_:)` and return `true`. Add the following:
+In order to use the transition delegate, you need both a strong reference to it, and need to assign the delegate to the controller being transitioned.
 
-	override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
-	  return true
+Open **PhotosController.swift** and add a new variable near the top of the class, near the other variables.
+
+	let presentationDelegate = FullscreenPresentationDelegate()
+
+Find the method **collectionView:didSelectItemAtIndexPath:** and before `presentViewController` is called, assign the transition delegate
+
+	destination.transitioningDelegate = presentationDelegate
+
+Build to save and make sure that your project compiles correctly.
+
+### Preparing to Animate
+
+Open **FullscreenPresentationAnimator.swift** and find the method **animateTransition:**. The `UIViewControllerContextTransitioning` parameter contains a lot of information about the configuration and state of your transition.
+
+In **animateTransition:**, get the following properties:
+
+	let to = ctx.viewControllerForKey(UITransitionContextToViewControllerKey)! as PhotoDetailController
+    let from = ctx.viewControllerForKey(UITransitionContextFromViewControllerKey)! as PhotosController
+    let container = ctx.containerView()
+    let duration = transitionDuration(ctx)
+
+Now that you have your properties, add the *to* view to the scene so that we will see it when we animate.
+
+	container.addSubview(to.view)
+
+### Making it animate
+
+Set an initial transform for the *to* view.
+
+	to.view.transform = CGAffineTransformMakeScale(0.1, 0.1)
+
+Then add a simple animation that removes the transform from the view.
+
+	UIView.animateWithDuration(duration, animations: {
+		to.view.transform = CGAffineTransformIdentity
+	}) { finished in
+		ctx.completeTransition(!ctx.transitionWasCancelled())
 	}
 
-Save your changes.
+Note the callback and call to `completeTransition:` and `transitionWasCancelled`.
 
-### 10) Add Session Titles
+`completeTransition:` *must* be called when you are finished with your custom animation. This tells the view controller system that the animation is done and it can go on its merry way.
 
-Open **ScheduleViewController.swift** and override `viewDidLoad()`, making sure to also call `super`. Add the following to the top of the class:
+`transitionWasCancelled` is a convenience method that will tell you if something has interrupted your transition or not. Usually with simple transitions like this you don't need to use it, but it's a good practice because you will need to use it once you get to interactive transitions.
 
-	override func viewDidLoad() {
-	  super.viewDidLoad()
-	
-	}
+Also, note that usually we would call `from.view.removeFromSuperview()` to clear it from the container, but since we are using a transparent background we want to leave it in the scene.
 
-Then, add the following just below the call to `super`:
+Build and run your app to see it work!
 
-	let dataSource = collectionView!.dataSource as ScheduleDataSource
+Wait a second, why can't you interact anymore?
 
-And finally, pass a cell configuration block to the data source that sets the cell’s `nameLabel` to the session title. Add the following to the bottom of `viewDidLoad()`:
+### Adding a Dismiss
 
-	dataSource.cellConfigurationBlock = {(cell: ScheduleCell, indexPath: NSIndexPath, session: NSDictionary) in
-	  cell.nameLabel.text = session["Name"] as NSString
-	}
+The view controller transitioning API doesn't play nicely when you don't follow the rules. The problem here is that your dismisser never calls `completeTransition:`.
 
-Save you changes. Build and run :]
+Open **FullscreenDismissAnimator.swift** and find the **animateTransition:** method. Add a call to complete the transition.
+
+	ctx.completeTransition(true)
+
+This wont make a very pretty animation, but at least it works.
+
+Build and run to see it in action.
 
 ### 11) That’s it!
 
-Congratulations! At this point you should have a basic custom layout up and running that displays the sessions of the conference schedule.
+Congratulations! At this point you should have a simple view controller animation between the list and detail views.
 
 You’re now ready to move onto the lab.
