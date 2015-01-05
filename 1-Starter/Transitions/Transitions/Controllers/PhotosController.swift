@@ -69,7 +69,6 @@ class PhotosController: UICollectionViewController {
   override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
     let destination = PhotoDetailController()
     destination.photo = photos[indexPath.row]
-    destination.modalPresentationStyle = .OverFullScreen
     presentViewController(destination, animated: true, completion: nil)
   }
 

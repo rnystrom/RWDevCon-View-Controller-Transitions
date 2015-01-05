@@ -78,7 +78,7 @@ class PhotosController: UICollectionViewController {
 
     let destination = PhotoDetailController()
     destination.photo = photos[indexPath.row]
-    destination.modalPresentationStyle = .OverFullScreen
+    destination.modalPresentationStyle = .Custom
     destination.transitioningDelegate = presentationDelegate
     presentViewController(destination, animated: true, completion: nil)
   }

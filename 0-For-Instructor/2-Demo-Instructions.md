@@ -80,8 +80,9 @@ Open **PhotosController.swift** and add a new variable near the top of the class
 
 	let presentationDelegate = FullscreenPresentationDelegate()
 
-Find the method **collectionView:didSelectItemAtIndexPath:** and before `presentViewController` is called, assign the transition delegate
+Find the method **collectionView:didSelectItemAtIndexPath:** and before `presentViewController` is called, assign the transition delegate and make your presentation style custom:
 
+	destination.modalPresentationStyle = .Custom
 	destination.transitioningDelegate = presentationDelegate
 
 Build to save and make sure that your project compiles correctly.
