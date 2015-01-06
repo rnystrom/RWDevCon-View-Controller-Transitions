@@ -21,7 +21,7 @@ class PhotosController: UICollectionViewController {
 
   let presentationDelegate = FullscreenPresentationDelegate()
   var selectedView: UIView?
-  var selectedViewOriginRect = CGRectZero
+  var selectedViewOriginRect = CGRect.zeroRect
 
   override func viewDidLoad() {
     super.viewDidLoad()

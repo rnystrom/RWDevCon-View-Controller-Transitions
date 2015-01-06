@@ -11,14 +11,14 @@ import UIKit
 
 class FullscreenDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
-  func transitionDuration(ctx: UIViewControllerContextTransitioning) -> NSTimeInterval {
+  func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
     return 0.4
   }
 
-  func animateTransition(ctx: UIViewControllerContextTransitioning) {
-    let to = ctx.viewControllerForKey(UITransitionContextToViewControllerKey)! as PhotosController
-    let from = ctx.viewControllerForKey(UITransitionContextFromViewControllerKey)! as PhotoDetailController
-    let duration = transitionDuration(ctx)
+  func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+    let to = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)! as PhotosController
+    let from = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)! as PhotoDetailController
+    let duration = transitionDuration(transitionContext)
 
     UIView.animateWithDuration(duration,
       delay: 0,
@@ -30,7 +30,7 @@ class FullscreenDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning
       }, completion: { finished in
         to.selectedView?.hidden = false
         from.view.removeFromSuperview()
-        ctx.completeTransition(!ctx.transitionWasCancelled())
+        transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
     })
 
     UIView.animateWithDuration(duration * 0.2, animations: {

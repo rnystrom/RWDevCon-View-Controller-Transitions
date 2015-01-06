@@ -11,15 +11,15 @@ import UIKit
 
 class FullscreenPresentationAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
-  func transitionDuration(ctx: UIViewControllerContextTransitioning) -> NSTimeInterval {
+  func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
     return 0.4
   }
 
-  func animateTransition(ctx: UIViewControllerContextTransitioning) {
-    let to = ctx.viewControllerForKey(UITransitionContextToViewControllerKey)! as PhotoDetailController
-    let from = ctx.viewControllerForKey(UITransitionContextFromViewControllerKey)! as PhotosController
-    let container = ctx.containerView()
-    let duration = transitionDuration(ctx)
+  func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+    let to = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)! as PhotoDetailController
+    let from = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)! as PhotosController
+    let container = transitionContext.containerView()
+    let duration = transitionDuration(transitionContext)
 
     container.addSubview(to.view)
 
@@ -28,7 +28,7 @@ class FullscreenPresentationAnimator: NSObject, UIViewControllerAnimatedTransiti
     UIView.animateWithDuration(duration, animations: {
       to.view.transform = CGAffineTransformIdentity
     }) { finished in
-      ctx.completeTransition(!ctx.transitionWasCancelled())
+      transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
     }
   }
 }

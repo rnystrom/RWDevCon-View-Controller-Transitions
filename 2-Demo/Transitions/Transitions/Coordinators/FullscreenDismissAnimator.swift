@@ -11,11 +11,11 @@ import UIKit
 
 class FullscreenDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
-  func transitionDuration(ctx: UIViewControllerContextTransitioning) -> NSTimeInterval {
+  func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
     return 0.4
   }
 
-  func animateTransition(ctx: UIViewControllerContextTransitioning) {
-    ctx.completeTransition(true)
+  func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+    transitionContext.completeTransition(true)
   }
 }

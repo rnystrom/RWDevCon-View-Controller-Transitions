@@ -31,7 +31,7 @@ Save your changes.
 
 ### Create Animators
 
-Just like you created the file *FullscreenPresentationDelegate.swift*, right-click the **Animation Coordinators** group and create two more swift files: **FullscreenPresentationAnimator.swift** and **FullscreenPresentationDelegate.swift**.
+Just like you created the file *FullscreenPresentationDelegate.swift*, right-click the **Animation Coordinators** group and the file **FullscreenPresentationAnimator.swift**.
 
 Open the file **FullscreenPresentationAnimator.swift**, and at the top import UIKit:
 
@@ -39,7 +39,7 @@ Open the file **FullscreenPresentationAnimator.swift**, and at the top import UI
 
 Then add the class definition, subclassing `NSObject` and conforming to the protocol `UIViewControllerAnimatedTransitioning`:
 
-	class FullscreenDismissAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+	class FullscreenPresentationAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 	}
 
 Try building the project. Notice that Xcode throws a compile error at you. This is because you need to finish conforming your new `FullscreenPresentationAnimator` class to the `UIViewControllerAnimatedTransitioning` protocol.
@@ -98,11 +98,11 @@ In **animateTransition:**, get the following properties:
     let container = ctx.containerView()
     let duration = transitionDuration(ctx)
 
+### Making it animate
+
 Now that you have your properties, add the *to* view to the scene so that we will see it when we animate.
 
 	container.addSubview(to.view)
-
-### Making it animate
 
 Set an initial transform for the *to* view.
 
@@ -134,7 +134,7 @@ The view controller transitioning API doesn't play nicely when you don't follow 
 
 Open **FullscreenDismissAnimator.swift** and find the **animateTransition:** method. Add a call to complete the transition.
 
-	ctx.completeTransition(true)
+	ctx.completeTransition(!ctx.transitionWasCancelled())
 
 This wont make a very pretty animation, but at least it works.
 
