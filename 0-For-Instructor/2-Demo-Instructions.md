@@ -1,4 +1,4 @@
-# 305: View Controller Transitions
+# 305: View Controller Transitions - Demo
 
 In this demo, you’ll build a slick custom view controller transition for your new .
 
