@@ -1,5 +1,9 @@
 # 305: View Controller Transitions - Demo
 
+Copy starter project, open, build & run.
+
+WAIT FOR EVERYONE TO CATCH UP
+
 In this demo, you’ll build a slick custom view controller transition for your new .
 
 The steps here will be explained in the demo, but here are the raw steps in case you miss a step or get stuck.
