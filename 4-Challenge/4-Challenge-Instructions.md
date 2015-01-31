@@ -25,6 +25,8 @@ After you have the duration of the animation, add in the following, create a UIV
 - Animation should begin from the **current state**
 
 Just like in the Lab, you need to animate the state from one controller to another and then perform any cleanup. Try filling in the animation block by using the diagram below, and if you get stuck, refer back to the work you did in `FullscreenPresentationAnimator`. 
+
+![](images/transition.png)
  
 In the animation completion block, do some additional cleanup to make sure that the from controller’s view is no longer loitering and to make sure that the image is visible when the animation finishes.
 
@@ -41,3 +43,5 @@ The last thing that you need to do is make sure that you have a nice, smooth bac
 Again, if you get stuck refer back to your background animation in `FullscreenPresentationAnimator`.
 
 **Build and run** your app, open a photo, then tap or drag and release to dismiss it to observe your fancy new transition animation! It should look something like the sequence below.
+
+![](images/steps.png)

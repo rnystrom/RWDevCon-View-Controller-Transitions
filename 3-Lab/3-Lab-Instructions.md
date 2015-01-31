@@ -11,10 +11,16 @@ In this short challenge, you will make the presentation animation originate from
 ## Lab: Make Me Pretty
 
 In order to get your transition to look like the photo is just getting larger and the background is fading, you should understand how to set the problem up. Frequently when building custom transitions, you will need to do a little planning before diving into code.
+
+Take a quick look at the before and after for both PhotosController and PhotoDetailController: 
+
+![](images/beforeafter.png)
  
 Notice how in the `PhotosController` view that the image that was selected (the first one) is up near the top of the scene. In the `PhotoDetailController` view, the selected image is centered. Currently the Transitions project does all of this already, but how could you animate the transition between states.
 
 The key to getting this transition right is to know the frame of the photo in the before state and the after state.
+
+![](images/transition.png)
  
 You are probably pretty used to using `CGRects` and `CGPoints` to layout and move views around the screen before. You will need to be able to determine the frame of the photo view relative to the screen when the transition **starts** and **ends**.
 
@@ -82,6 +88,8 @@ Add another block of code beneath the code you just added:
 >Note: Typically you would call `removeFromSuperview` on the from controller’s view in the completion block. However, since you are using an overlay transition, you want to keep the from controller’s view in the scene, otherwise the background would go black after the transition finishes. 
 
 **Build and run** your app and tap on a photo to see your transition!
+
+![](images/steps.png)
  
 You might notice a kind of jarring effect. The background of the transition immediately pops into view. It would be much more pleasing on the eyes if the background actually faded in.
 
@@ -102,6 +110,8 @@ Still in **FullscreenPresentationAnimator.swift**, add the following to the very
 **Build and run** to see your new subtle background fade!
 
 There’s one more nitpicky thing that you could do to make the app feel even more immersive. If you haven’t noticed yet, you can actually still see the image that you are animating into scene. This takes you out of the transition a little because you are immediately aware that you are looking at a copy of the view, not the actual one that you tapped on.
+
+![](images/same.png)
  
 Add a single line to the end of **animateTransition:**
 
